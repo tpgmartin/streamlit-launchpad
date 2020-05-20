@@ -1,0 +1,24 @@
+<html>
+<meta http-equiv="refresh" content="1" />
+
+<head>
+    <title>Streamlit Launchpad - app status</title>
+    <style>
+        * {
+            font-family: sans-serif;
+        }
+        .container {
+            margin: 0 auto;
+            width: 800px;
+        }
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <p>Starting app {{ escape(app.name) }} on port {{ port }}.</p>
+
+        <p>Will reload automatically in 1 sec. Click <a href="#" onclick="javascript:window.location.reload()">here</a> to reload manually.</p>
+
+    </div>
+</body>
+</html>
