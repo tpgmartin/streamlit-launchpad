@@ -16,7 +16,7 @@ proxymap = {}
 
 port = 8500
 
-template_loader = tornado.template.Loader(os.path.join(os.path.dirname(os.path.realpath(__file__)),"templates"))
+# template_loader = tornado.template.Loader(os.path.join(os.path.dirname(os.path.realpath(__file__)),"templates"))
 
 scan_folder_path = '../examples'
 
@@ -26,7 +26,8 @@ class MainHandler(tornado.web.RequestHandler):
         apps = []
         for f in os.scandir(scan_folder_path):
             if f.name[-3:] == '.py':
-                apps.append(AppInfo(name=f.name, url="/{}/".format(f.name)))
+                fname = ' '.join([f[0].upper() + f[1:] for f in f.name[:-3].split('_')])
+                apps.append(AppInfo(name=fname, url="/{}/".format(f.name)))
 
         self.write(template_loader.load('main.html').generate(apps=apps, cwd=scan_folder_path))
         self.finish()
@@ -137,10 +138,15 @@ def make_app():
 
 @click.command()
 @click.option('--port', default=8888, help='port for the launchpad server')
+@click.option('--templates', default='./launchpad/templates', help='folder for template views')
 @click.argument('folder')
-def run(port, folder):
-    global scan_folder_path
+def run(port, templates, folder):
+    global scan_folder_path, template_loader
+
     scan_folder_path = os.path.abspath(folder)
+    templates = os.path.abspath(templates)
+    template_loader = tornado.template.Loader(os.path.join(os.path.dirname(os.path.realpath(__file__)),templates))
+
     app = make_app()
 
     async def shutdown():
